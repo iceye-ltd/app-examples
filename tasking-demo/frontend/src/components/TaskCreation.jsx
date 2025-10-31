@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { api } from '../lib/api'
 import MapPicker from './MapPicker'
@@ -24,6 +24,11 @@ function TaskCreation({ contract, onTaskCreated, onBack }) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [isMapExpanded, setIsMapExpanded] = useState(false)
+
+  // Wrap map location change handler in useCallback to prevent unnecessary re-renders
+  const handleLocationChange = useCallback((lat, lon) => {
+    setFormData(prev => ({...prev, latitude: lat, longitude: lon}))
+  }, [])
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -110,7 +115,7 @@ function TaskCreation({ contract, onTaskCreated, onBack }) {
           <MapPicker
             latitude={parseFloat(formData.latitude)}
             longitude={parseFloat(formData.longitude)}
-            onChange={(lat, lon) => setFormData({...formData, latitude: lat, longitude: lon})}
+            onChange={handleLocationChange}
             isExpanded={isMapExpanded}
             onToggleExpand={() => setIsMapExpanded(!isMapExpanded)}
           />

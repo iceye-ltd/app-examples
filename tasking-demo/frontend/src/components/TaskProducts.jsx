@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react'
+import { useState, useEffect, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { api } from '../lib/api'
 import './TaskMonitoring.css'
@@ -15,14 +15,7 @@ function TaskProducts({ taskId, taskStatus }) {
   const isCompleted = ['FULFILLED', 'DONE'].includes(taskStatus)
   const hasMoreProductsComing = taskStatus === 'FULFILLED' // FULFILLED = SLA products ready, DONE = all products ready
 
-  // Load products when task reaches FULFILLED or DONE status
-  useEffect(() => {
-    if (isCompleted) {
-      loadProducts()
-    }
-  }, [taskId, taskStatus])
-
-  const loadProducts = async () => {
+  const loadProducts = useCallback(async () => {
     try {
       setLoading(true)
       setError(null)
@@ -33,7 +26,14 @@ function TaskProducts({ taskId, taskStatus }) {
     } finally {
       setLoading(false)
     }
-  }
+  }, [taskId])
+
+  // Load products when task reaches FULFILLED or DONE status
+  useEffect(() => {
+    if (isCompleted) {
+      loadProducts()
+    }
+  }, [isCompleted, loadProducts])
 
   // Don't render anything if task isn't completed yet
   if (!isCompleted) {

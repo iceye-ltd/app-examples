@@ -1,4 +1,4 @@
-import { useState, useEffect, useRef } from 'react'
+import { useState, useEffect, useRef, useCallback } from 'react'
 import PropTypes from 'prop-types'
 import { api } from '../lib/api'
 import TaskTimeline from './TaskTimeline'
@@ -38,30 +38,7 @@ function TaskMonitoring({ task: initialTask, onReset }) {
     )
   }
 
-  // Set up polling on mount
-  useEffect(() => {
-    // Initial refresh
-    refreshTask()
-
-    // Poll for task status every 5 seconds
-    pollingIntervalRef.current = setInterval(() => {
-      refreshTask()
-      setSecondsUntilRefresh(5)
-    }, 5000)
-
-    // Update countdown every second
-    countdownIntervalRef.current = setInterval(() => {
-      setSecondsUntilRefresh(prev => Math.max(0, prev - 1))
-    }, 1000)
-
-    // Cleanup: Stop timers when user navigates away from this screen
-    return () => {
-      if (pollingIntervalRef.current) clearInterval(pollingIntervalRef.current)
-      if (countdownIntervalRef.current) clearInterval(countdownIntervalRef.current)
-    }
-  }, [])
-
-  const refreshTask = async () => {
+  const refreshTask = useCallback(async () => {
     try {
       setSecondsUntilRefresh(5)
       
@@ -95,7 +72,30 @@ function TaskMonitoring({ task: initialTask, onReset }) {
     } catch (err) {
       setError(err.message)
     }
-  }
+  }, [task.id])
+
+  // Set up polling on mount
+  useEffect(() => {
+    // Initial refresh
+    refreshTask()
+
+    // Poll for task status every 5 seconds
+    pollingIntervalRef.current = setInterval(() => {
+      refreshTask()
+      setSecondsUntilRefresh(5)
+    }, 5000)
+
+    // Update countdown every second
+    countdownIntervalRef.current = setInterval(() => {
+      setSecondsUntilRefresh(prev => Math.max(0, prev - 1))
+    }, 1000)
+
+    // Cleanup: Stop timers when user navigates away from this screen
+    return () => {
+      if (pollingIntervalRef.current) clearInterval(pollingIntervalRef.current)
+      if (countdownIntervalRef.current) clearInterval(countdownIntervalRef.current)
+    }
+  }, [refreshTask])
 
   const loadScene = async () => {
     try {
