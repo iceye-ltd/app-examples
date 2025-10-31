@@ -7,7 +7,7 @@ Make sure you visit our [developer documentation](https://docs.iceye.com/constel
 
 - All examples require ICEYE API credentials.
 - Each example includes its own README with detailed setup instructions.
-- For more information, visit our [developer documentation](ttps://docs.iceye.com/constellation/api/).
+- For more information, visit our [developer documentation](https://docs.iceye.com/constellation/api/).
 
 ---
 
