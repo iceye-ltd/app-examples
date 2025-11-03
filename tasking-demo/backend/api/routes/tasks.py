@@ -9,7 +9,7 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from typing import Optional
 import httpx
-import os
+from api.config import ICEYE_API_URL
 from api.routes.auth import get_iceye_token
 
 router = APIRouter()
@@ -102,7 +102,7 @@ async def create_task(task: TaskRequest):
     
     async with httpx.AsyncClient() as client:
         response = await client.post(
-            f"{os.getenv('ICEYE_API_URL')}/tasking/v2/tasks",
+            f"{ICEYE_API_URL}/tasking/v2/tasks",
             headers={"Authorization": f"Bearer {token}"},
             json=payload
         )
@@ -128,7 +128,7 @@ async def get_task_status(task_id: str):
     
     async with httpx.AsyncClient() as client:
         response = await client.get(
-            f"{os.getenv('ICEYE_API_URL')}/tasking/v2/tasks/{task_id}",
+            f"{ICEYE_API_URL}/tasking/v2/tasks/{task_id}",
             headers={"Authorization": f"Bearer {token}"}
         )
     
@@ -157,7 +157,7 @@ async def get_task_products(task_id: str):
     
     async with httpx.AsyncClient() as client:
         response = await client.get(
-            f"{os.getenv('ICEYE_API_URL')}/tasking/v2/tasks/{task_id}/products",
+            f"{ICEYE_API_URL}/tasking/v2/tasks/{task_id}/products",
             headers={"Authorization": f"Bearer {token}"}
         )
     
@@ -184,7 +184,7 @@ async def get_task_scene(task_id: str):
     
     async with httpx.AsyncClient() as client:
         response = await client.get(
-            f"{os.getenv('ICEYE_API_URL')}/tasking/v2/tasks/{task_id}/scene",
+            f"{ICEYE_API_URL}/tasking/v2/tasks/{task_id}/scene",
             headers={"Authorization": f"Bearer {token}"}
         )
     
@@ -211,7 +211,7 @@ async def cancel_task(task_id: str):
     
     async with httpx.AsyncClient() as client:
         response = await client.patch(
-            f"{os.getenv('ICEYE_API_URL')}/tasking/v2/tasks/{task_id}",
+            f"{ICEYE_API_URL}/tasking/v2/tasks/{task_id}",
             headers={"Authorization": f"Bearer {token}"},
             json={"status": "CANCELED"}
         )

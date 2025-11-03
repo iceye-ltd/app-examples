@@ -6,7 +6,7 @@ when creating tasking requests (e.g., imaging modes, priorities, SLAs).
 """
 from fastapi import APIRouter, HTTPException
 import httpx
-import os
+from api.config import ICEYE_API_URL
 from api.routes.auth import get_iceye_token
 
 router = APIRouter()
@@ -25,7 +25,7 @@ async def get_contracts():
     
     async with httpx.AsyncClient() as client:
         response = await client.get(
-            f"{os.getenv('ICEYE_API_URL')}/company/v1/contracts",
+            f"{ICEYE_API_URL}/company/v1/contracts",
             headers={"Authorization": f"Bearer {token}"}
         )
     
@@ -51,7 +51,7 @@ async def get_contract(contract_id: str):
     
     async with httpx.AsyncClient() as client:
         response = await client.get(
-            f"{os.getenv('ICEYE_API_URL')}/company/v1/contracts/{contract_id}",
+            f"{ICEYE_API_URL}/company/v1/contracts/{contract_id}",
             headers={"Authorization": f"Bearer {token}"}
         )
     
@@ -77,7 +77,7 @@ async def get_contract_summary(contract_id: str):
     
     async with httpx.AsyncClient() as client:
         response = await client.get(
-            f"{os.getenv('ICEYE_API_URL')}/company/v1/contracts/{contract_id}/summary",
+            f"{ICEYE_API_URL}/company/v1/contracts/{contract_id}/summary",
             headers={"Authorization": f"Bearer {token}"}
         )
     
