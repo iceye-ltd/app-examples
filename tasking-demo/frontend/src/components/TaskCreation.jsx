@@ -18,8 +18,8 @@ function TaskCreation({ contract, onTaskCreated, onBack }) {
     incidence_angle_max: 45,
     look_side: 'ANY',
     pass_direction: 'ANY',
-    priority: contract.priority?.default || contract.priority?.allowed?.[0] || 'COMMERCIAL',
-    sla: contract.sla?.default || contract.sla?.allowed?.[0] || 'SLA_24H'
+    priority: contract.priority?.default || contract.priority?.allowed?.[0] || '',
+    sla: contract.sla?.default || contract.sla?.allowed?.[0] || ''
   })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
