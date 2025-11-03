@@ -137,10 +137,7 @@ function MapPicker({ latitude, longitude, onChange, isExpanded = false, onToggle
   }, [latitude, longitude])
 
   const handleLocationChange = (lat, lon) => {
-    // Round to 4 decimal places (~11m precision, good for satellite tasking)
-    const roundedLat = Math.round(lat * 10000) / 10000
-    const roundedLon = Math.round(lon * 10000) / 10000
-    onChange(roundedLat, roundedLon)
+    onChange(lat, lon)
   }
 
   const handleMarkerDrag = (e) => {
