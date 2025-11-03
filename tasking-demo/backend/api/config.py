@@ -13,12 +13,15 @@ from dotenv import load_dotenv
 # Load environment variables from .env file
 load_dotenv()
 
+# Default values
+DEFAULT_FRONTEND_URL = "http://localhost:5173"
+
 # Read configuration once at startup (not on every request)
 ICEYE_API_URL = os.getenv("ICEYE_API_URL")
 ICEYE_AUTH_URL = os.getenv("ICEYE_AUTH_URL")
 ICEYE_CLIENT_ID = os.getenv("ICEYE_CLIENT_ID")
 ICEYE_CLIENT_SECRET = os.getenv("ICEYE_CLIENT_SECRET")
-FRONTEND_URL = os.getenv("FRONTEND_URL", "http://localhost:5173")
+FRONTEND_URL = os.getenv("FRONTEND_URL", DEFAULT_FRONTEND_URL)
 
 # Validate required configuration at startup
 _missing_vars = []
