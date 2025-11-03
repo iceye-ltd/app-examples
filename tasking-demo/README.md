@@ -65,7 +65,7 @@ Navigate to `http://localhost:5173`
 ## Tech Stack
 
 **Frontend:**
-- React 18 + Vite
+- React 18 + Vite 7
 - Leaflet (interactive maps)
 - OpenStreetMap (no API key required)
 
