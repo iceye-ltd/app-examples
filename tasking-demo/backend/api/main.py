@@ -11,9 +11,8 @@ provides a clean separation between frontend and ICEYE APIs.
 """
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-import os
 import logging
-from dotenv import load_dotenv
+from api.config import FRONTEND_URL
 from api.routes import contracts, tasks
 
 # Configure logging
@@ -21,9 +20,6 @@ logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
-
-# Load environment variables from .env file
-load_dotenv()
 
 # Create FastAPI app
 app = FastAPI(
@@ -38,7 +34,7 @@ app = FastAPI(
 # For production, restrict to only the methods and headers your app actually uses.
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=[os.getenv("FRONTEND_URL", "http://localhost:5173")],
+    allow_origins=[FRONTEND_URL],
     allow_credentials=True,
     allow_methods=["*"],  # Allows extension - restrict in production
     allow_headers=["*"],  # Allows custom headers - restrict in production

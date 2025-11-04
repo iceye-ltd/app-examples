@@ -3,10 +3,10 @@ Authentication helper - gets and caches OAuth2 tokens from ICEYE.
 """
 import base64
 import httpx
-import os
 import logging
 from datetime import datetime, timedelta
 from fastapi import HTTPException
+from api.config import ICEYE_CLIENT_ID, ICEYE_CLIENT_SECRET, ICEYE_AUTH_URL
 
 logger = logging.getLogger(__name__)
 
@@ -29,24 +29,12 @@ async def get_iceye_token():
         if datetime.now() < _token_cache["expires_at"]:
             return _token_cache["token"]
     
-    # Check credentials are configured
-    client_id = os.getenv('ICEYE_CLIENT_ID')
-    client_secret = os.getenv('ICEYE_CLIENT_SECRET')
-    
-    if not client_id or not client_secret or client_id == 'your-client-id-here':
-        logger.error("ICEYE credentials not configured in .env file")
-        raise HTTPException(
-            status_code=500,
-            detail="ICEYE API credentials not configured. Please update backend/.env file."
-        )
-    
     # Get new token from ICEYE
     # Append /v1/token to the base OAuth URL provided by ICEYE
-    auth_base_url = os.getenv('ICEYE_AUTH_URL')
-    auth_url = f"{auth_base_url}/v1/token"
+    auth_url = f"{ICEYE_AUTH_URL}/v1/token"
     logger.info(f"Requesting auth token from {auth_url}")
     
-    credentials = f"{client_id}:{client_secret}"
+    credentials = f"{ICEYE_CLIENT_ID}:{ICEYE_CLIENT_SECRET}"
     base64_credentials = base64.b64encode(credentials.encode()).decode()
     
     async with httpx.AsyncClient() as client:
