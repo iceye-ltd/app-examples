@@ -16,6 +16,14 @@ A demo application showing how to integrate with ICEYE's satellite tasking APIs.
 
 This demo application shows how to order satellite imagery from ICEYE using their Tasking API.
 
+### Demo video
+
+<div style="position: relative; padding-bottom: 56.25%; height: 0;"><iframe src="https://www.loom.com/embed/74f4fd54b402485cb8be648bc2669e0c?sid=8f9c5e3a-8e5e-4f5a-9f5e-5e3a8f9c5e3a" frameborder="0" webkitallowfullscreen mozallowfullscreen allowfullscreen style="position: absolute; top: 0; left: 0; width: 100%; height: 100%;"></iframe></div>
+
+*Watch a walkthrough of the application*
+
+**Companion Guide:** Follow along with the step-by-step tutorial: [Build a Tasking Application](https://docs.iceye.com/constellation/api/how-to/build-tasking-application/)
+
 ### How It Works
 
 1. **Select Contract** → Choose from your available ICEYE contracts
