@@ -8,7 +8,7 @@ A demo application showing how to integrate with ICEYE's satellite tasking APIs.
 [![Python](https://img.shields.io/badge/python-3.9+-blue.svg)](https://www.python.org/downloads/)
 [![Node](https://img.shields.io/badge/node-18+-green.svg)](https://nodejs.org/)
 
-> **⚠️ Disclaimer:** This is a demo application for educational purposes. It is not intended for production use as-is. Before deploying to production, implement proper security measures, error handling, logging, monitoring, and follow your organization's security and compliance requirements.
+> **⚠️ Disclaimer:** This is a demo application for educational purposes only. It is not intended for production use as-is. Support is provided on a best-effort basis. Before deploying to production, implement proper security measures, error handling, logging, monitoring, and follow your organization's security and compliance requirements.
 
 ---
 
