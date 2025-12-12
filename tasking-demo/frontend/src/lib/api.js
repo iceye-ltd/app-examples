@@ -21,7 +21,33 @@ export const api = {
     return res.json()
   },
 
+  // Feasibility
+  async checkFeasibility(taskData) {
+    const res = await fetch(`${API_BASE}/tasks/feasibility`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(taskData)
+    })
+    if (!res.ok) {
+      const error = await res.text()
+      throw new Error(error || 'Failed to check feasibility')
+    }
+    return res.json()
+  },
+
   // Tasks
+  async listTasks(params = {}) {
+    const searchParams = new URLSearchParams()
+    if (params.limit) searchParams.set('limit', params.limit)
+    if (params.contractID) searchParams.set('contractID', params.contractID)
+    if (params.cursor) searchParams.set('cursor', params.cursor)
+    
+    const url = `${API_BASE}/tasks${searchParams.toString() ? '?' + searchParams.toString() : ''}`
+    const res = await fetch(url)
+    if (!res.ok) throw new Error('Failed to fetch tasks')
+    return res.json()
+  },
+
   async createTask(taskData) {
     const res = await fetch(`${API_BASE}/tasks`, {
       method: 'POST',

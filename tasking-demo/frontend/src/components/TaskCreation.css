@@ -281,6 +281,62 @@
   color: #166534;
 }
 
+/* Feasibility Result */
+.feasibility-result {
+  border-radius: 8px;
+  padding: 1rem;
+  margin-bottom: 1rem;
+}
+
+.feasibility-success {
+  background: #f0fdf4;
+  border: 1px solid #86efac;
+}
+
+.feasibility-failure {
+  background: #fef2f2;
+  border: 1px solid #fca5a5;
+}
+
+.feasibility-header {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.feasibility-icon {
+  font-size: 1.25rem;
+  font-weight: bold;
+}
+
+.feasibility-success .feasibility-icon {
+  color: #16a34a;
+}
+
+.feasibility-failure .feasibility-icon {
+  color: #dc2626;
+}
+
+.feasibility-success .feasibility-header strong {
+  color: #166534;
+}
+
+.feasibility-failure .feasibility-header strong {
+  color: #991b1b;
+}
+
+.feasibility-error {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: #991b1b;
+}
+
+.feasibility-detail {
+  margin-top: 0.5rem;
+  font-size: 0.875rem;
+  color: #64748b;
+}
+
 .form-actions {
   display: flex;
   gap: 1rem;
