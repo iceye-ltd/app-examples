@@ -18,6 +18,22 @@
   margin: 0 auto;
 }
 
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.header-btn {
+  background: rgba(255, 255, 255, 0.15);
+  color: white;
+  border: 1px solid rgba(255, 255, 255, 0.3);
+}
+
+.header-btn:hover {
+  background: rgba(255, 255, 255, 0.25);
+}
+
 .header h1 {
   font-size: 2rem;
   margin-bottom: 0.5rem;

@@ -24,11 +24,55 @@ function TaskCreation({ contract, onTaskCreated, onBack }) {
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState(null)
   const [isMapExpanded, setIsMapExpanded] = useState(false)
+  
+  // Feasibility state
+  const [feasibilityLoading, setFeasibilityLoading] = useState(false)
+  const [feasibilityResult, setFeasibilityResult] = useState(null)
 
   // Wrap map location change handler in useCallback to prevent unnecessary re-renders
   const handleLocationChange = useCallback((lat, lon) => {
     setFormData(prev => ({...prev, latitude: lat, longitude: lon}))
   }, [])
+
+  // Build task data object from form state
+  const buildTaskData = () => ({
+    contract_id: contract.id,
+    location: {
+      lat: parseFloat(formData.latitude),
+      lon: parseFloat(formData.longitude)
+    },
+    imaging_mode: formData.imaging_mode,
+    acquisition_window: {
+      start: new Date(formData.start_date).toISOString(),
+      end: new Date(formData.end_date).toISOString()
+    },
+    reference: formData.reference || undefined,
+    // Advanced parameters (only include if not default/empty)
+    incidence_angle: formData.incidence_angle_min && formData.incidence_angle_max ? {
+      min: parseInt(formData.incidence_angle_min),
+      max: parseInt(formData.incidence_angle_max)
+    } : undefined,
+    look_side: formData.look_side || undefined,
+    pass_direction: formData.pass_direction || undefined,
+    priority: formData.priority || undefined,
+    sla: formData.sla || undefined
+  })
+
+  const handleCheckFeasibility = async () => {
+    setError(null)
+    setFeasibilityLoading(true)
+    setFeasibilityResult(null)
+
+    try {
+      const taskData = buildTaskData()
+      const result = await api.checkFeasibility(taskData)
+      setFeasibilityResult(result)
+    } catch (err) {
+      setFeasibilityResult({ error: err.message })
+    } finally {
+      setFeasibilityLoading(false)
+    }
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -36,28 +80,7 @@ function TaskCreation({ contract, onTaskCreated, onBack }) {
     setLoading(true)
 
     try {
-      const taskData = {
-        contract_id: contract.id,
-        location: {
-          lat: parseFloat(formData.latitude),
-          lon: parseFloat(formData.longitude)
-        },
-        imaging_mode: formData.imaging_mode,
-        acquisition_window: {
-          start: new Date(formData.start_date).toISOString(),
-          end: new Date(formData.end_date).toISOString()
-        },
-        reference: formData.reference || undefined,
-        // Advanced parameters (only include if not default/empty)
-        incidence_angle: formData.incidence_angle_min && formData.incidence_angle_max ? {
-          min: parseInt(formData.incidence_angle_min),
-          max: parseInt(formData.incidence_angle_max)
-        } : undefined,
-        look_side: formData.look_side || undefined,
-        pass_direction: formData.pass_direction || undefined,
-        priority: formData.priority || undefined,
-        sla: formData.sla || undefined
-      }
+      const taskData = buildTaskData()
 
       const task = await api.createTask(taskData)
       
@@ -319,11 +342,50 @@ function TaskCreation({ contract, onTaskCreated, onBack }) {
             </div>
           </div>
 
+          {/* Feasibility Result */}
+          {feasibilityResult && (
+            <div className={`feasibility-result ${
+              feasibilityResult.error 
+                ? 'feasibility-failure' 
+                : feasibilityResult.feasibility?.[0]?.result === 'FEASIBLE' 
+                  ? 'feasibility-success' 
+                  : 'feasibility-failure'
+            }`}>
+              <div className="feasibility-header">
+                <span className="feasibility-icon">
+                  {feasibilityResult.error 
+                    ? '✗' 
+                    : feasibilityResult.feasibility?.[0]?.result === 'FEASIBLE' ? '✓' : '✗'}
+                </span>
+                <strong>
+                  {feasibilityResult.error 
+                    ? 'Feasibility Check Failed'
+                    : feasibilityResult.feasibility?.[0]?.result === 'FEASIBLE' 
+                      ? 'Task is Feasible' 
+                      : 'Task is not Feasible'}
+                </strong>
+              </div>
+              {feasibilityResult.error && (
+                <div className="feasibility-error">
+                  {feasibilityResult.error}
+                </div>
+              )}
+            </div>
+          )}
+
           <div className="form-actions">
+            <button
+              type="button"
+              className="btn btn-secondary"
+              onClick={handleCheckFeasibility}
+              disabled={feasibilityLoading || loading}
+            >
+              {feasibilityLoading ? 'Checking...' : 'Check Feasibility'}
+            </button>
             <button
               type="submit"
               className="btn btn-primary"
-              disabled={loading}
+              disabled={loading || feasibilityLoading}
             >
               {loading ? 'Creating Task...' : 'Create Task'}
             </button>

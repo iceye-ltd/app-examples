@@ -14,6 +14,7 @@ from api.routes.auth import get_iceye_token
 
 router = APIRouter()
 
+
 class Location(BaseModel):
     """Geographic coordinates."""
     lat: float
@@ -28,65 +29,145 @@ class TaskRequest(BaseModel):
     """
     Task creation request.
     
-    Note: This model includes the most common parameters.
-    To add more ICEYE API parameters, add them here and update build_task_payload().
+    Includes the most common parameters. To add more ICEYE API parameters,
+    add fields here and update build_task_payload().
     """
-    # Required fields
     contract_id: str
     location: Location
-    imaging_mode: str  # e.g., "SPOTLIGHT_HIGH"
+    imaging_mode: str
     acquisition_window: AcquisitionWindow
-    
-    # Optional fields
     reference: Optional[str] = None
-    incidence_angle: Optional[dict] = None  # {"min": 10, "max": 45}
-    look_side: Optional[str] = None  # "LEFT", "RIGHT", or "ANY"
-    pass_direction: Optional[str] = None  # "ASCENDING", "DESCENDING", or "ANY"
-    imaging_duration: Optional[int] = None  # Duration in seconds
-    priority: Optional[str] = None  # "BACKGROUND" or "COMMERCIAL"
-    sla: Optional[str] = None  # Service Level Agreement (e.g., "SLA_12H")
+    incidence_angle: Optional[dict] = None
+    look_side: Optional[str] = None
+    pass_direction: Optional[str] = None
+    imaging_duration: Optional[int] = None
+    priority: Optional[str] = None
+    sla: Optional[str] = None
+
+class FeasibilityRequest(BaseModel):
+    """Feasibility check request."""
+    contract_id: str
+    location: Location
+    imaging_mode: str
+    acquisition_window: AcquisitionWindow
+    reference: Optional[str] = None
+    incidence_angle: Optional[dict] = None
+    look_side: Optional[str] = None
+    pass_direction: Optional[str] = None
+    priority: Optional[str] = None
+    sla: Optional[str] = None
+
+
+def build_feasibility_payload(req: FeasibilityRequest) -> list:
+    """Convert frontend request to ICEYE Feasibility API format (array)."""
+    payload = {
+        "contractID": req.contract_id,
+        "imagingMode": req.imaging_mode,
+        "pointOfInterest": {"lat": req.location.lat, "lon": req.location.lon},
+        "acquisitionWindow": {"start": req.acquisition_window.start, "end": req.acquisition_window.end}
+    }
+    if req.reference:
+        payload["reference"] = req.reference
+    if req.incidence_angle:
+        payload["incidenceAngle"] = req.incidence_angle
+    if req.look_side:
+        payload["lookSide"] = req.look_side
+    if req.pass_direction:
+        payload["passDirection"] = req.pass_direction
+    if req.priority:
+        payload["priority"] = req.priority
+    if req.sla:
+        payload["sla"] = req.sla
+    return [payload]
 
 def build_task_payload(task: TaskRequest) -> dict:
-    """
-    Convert frontend snake_case to ICEYE API format.
-    Only includes fields that are provided (not None).
-    """
+    """Convert frontend request to ICEYE Task API format."""
     payload = {
-        "contractID": task.contract_id,  # Note: API uses "contractID" not "contractId"
+        "contractID": task.contract_id,
         "imagingMode": task.imaging_mode,
-        "pointOfInterest": {
-            "lat": task.location.lat,
-            "lon": task.location.lon
-        },
-        "acquisitionWindow": {
-            "start": task.acquisition_window.start,
-            "end": task.acquisition_window.end
-        }
+        "pointOfInterest": {"lat": task.location.lat, "lon": task.location.lon},
+        "acquisitionWindow": {"start": task.acquisition_window.start, "end": task.acquisition_window.end}
     }
-    
-    # Add optional fields only if provided
     if task.reference:
         payload["reference"] = task.reference
-    
     if task.incidence_angle:
         payload["incidenceAngle"] = task.incidence_angle
-    
     if task.look_side:
         payload["lookSide"] = task.look_side
-    
     if task.imaging_duration:
         payload["imagingDuration"] = task.imaging_duration
-    
     if task.pass_direction:
         payload["passDirection"] = task.pass_direction
-    
     if task.priority:
         payload["priority"] = task.priority
-    
     if task.sla:
         payload["sla"] = task.sla
-    
     return payload
+
+
+@router.post("/feasibility")
+async def check_feasibility(req: FeasibilityRequest):
+    """
+    Check if a tasking request is feasible before creating a task.
+    
+    Returns feasibility status and details about potential imaging opportunities.
+    
+    API: POST /tasking/v2/feasibility
+    API Reference: https://docs.iceye.com/constellation/api/specification/tasking/v2/#operation/checkFeasibility
+    Guide: https://docs.iceye.com/constellation/api/tasking/check-feasibility/
+    """
+    token = await get_iceye_token()
+    payload = build_feasibility_payload(req)
+    
+    async with httpx.AsyncClient(timeout=120.0) as client:
+        response = await client.post(
+            f"{ICEYE_API_URL}/tasking/v2/feasibility",
+            headers={"Authorization": f"Bearer {token}"},
+            json=payload
+        )
+    
+    if response.status_code != 200:
+        raise HTTPException(
+            status_code=response.status_code,
+            detail=f"Feasibility check failed: {response.text}"
+        )
+    
+    return response.json()
+
+@router.get("")
+async def list_tasks(
+    limit: int = 50,
+    contractID: Optional[str] = None,
+    cursor: Optional[str] = None
+):
+    """
+    List all tasks with optional filtering and pagination.
+    
+    API: GET /tasking/v2/tasks
+    API Reference: https://docs.iceye.com/constellation/api/specification/tasking/v2/#operation/getTasks
+    """
+    token = await get_iceye_token()
+    
+    params = {"limit": limit}
+    if contractID:
+        params["contractID"] = contractID
+    if cursor:
+        params["cursor"] = cursor
+    
+    async with httpx.AsyncClient(timeout=120.0) as client:
+        response = await client.get(
+            f"{ICEYE_API_URL}/tasking/v2/tasks",
+            headers={"Authorization": f"Bearer {token}"},
+            params=params
+        )
+    
+    if response.status_code != 200:
+        raise HTTPException(
+            status_code=response.status_code,
+            detail=f"Failed to list tasks: {response.text}"
+        )
+    
+    return response.json()
 
 @router.post("")
 async def create_task(task: TaskRequest):
