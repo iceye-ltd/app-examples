@@ -17,6 +17,7 @@ Make sure you visit our [developer documentation](https://docs.iceye.com/constel
 
 | Example | Description |
 | ------- | ----------- |
+| [catalog-explorer](catalog-explorer) | Full-stack React + FastAPI application demonstrating how to browse, search, price, and purchase satellite imagery from ICEYE's Catalog API. Includes map-based search, STAC item browsing, purchase workflow, and download management. |
 | [tasking-demo](tasking-demo) | Full-stack React + FastAPI application demonstrating the complete workflow for requesting satellite imagery captures using ICEYE's Tasking API. Includes OAuth2 authentication, contract management, interactive map, task monitoring, and product downloads. |
 
 <p>&nbsp;</p>
