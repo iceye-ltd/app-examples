@@ -34,7 +34,7 @@ This demo application shows how to work with the ICEYE Catalog API to discover, 
 ### Prerequisites
 
 - Python 3.10+ (with pip)
-- Node.js 18+ (with npm)
+- Node.js 20+ (with npm)
 - ICEYE API credentials
 
 **Note:** All Python dependencies (including uvicorn server) are installed via `pip install -r requirements.txt`
