@@ -1,0 +1,93 @@
+.item-list h3 {
+  font-size: 0.9375rem;
+  color: #475569;
+  margin-bottom: 0.75rem;
+}
+
+.empty-state {
+  color: #64748b;
+  text-align: center;
+  padding: 2rem 1rem;
+  font-size: 0.875rem;
+}
+
+.item-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 0.75rem;
+}
+
+.item-card {
+  border: 2px solid #e2e8f0;
+  border-radius: 8px;
+  overflow: hidden;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.item-card:hover {
+  border-color: #3b82f6;
+  transform: translateY(-2px);
+  box-shadow: 0 4px 12px rgba(59, 130, 246, 0.15);
+}
+
+.item-thumb {
+  width: 100%;
+  height: 120px;
+  overflow: hidden;
+  background: #0f172a;
+}
+
+.item-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.item-card-content {
+  padding: 0.75rem;
+}
+
+.item-card-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 0.5rem;
+}
+
+.item-frame {
+  font-weight: 600;
+  font-size: 0.875rem;
+  color: #1e293b;
+}
+
+.badge-mode {
+  background: #eff6ff;
+  color: #1e40af;
+  padding: 0.125rem 0.5rem;
+  border-radius: 6px;
+  font-size: 0.6875rem;
+  font-weight: 600;
+}
+
+.item-card-body {
+  font-size: 0.8125rem;
+  color: #64748b;
+}
+
+.item-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 0.125rem;
+  margin-bottom: 0.375rem;
+}
+
+.item-date {
+  color: #94a3b8;
+  font-size: 0.75rem;
+}
+
+.load-more {
+  text-align: center;
+  margin-top: 1rem;
+}
