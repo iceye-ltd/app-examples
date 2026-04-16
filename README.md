@@ -1,4 +1,6 @@
 # ICEYE Constellation API - App Examples
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Ficeye-ltd%2Fapp-examples.svg?type=shield)](https://app.fossa.com/projects/git%2Bgithub.com%2Ficeye-ltd%2Fapp-examples?ref=badge_shield)
+
 
 Welcome to ICEYE Constellation API App Examples! In this repository you can find examples of applications built using ICEYE's APIs. \
 Make sure you visit our [developer documentation](https://docs.iceye.com/constellation/api/) to learn more.
@@ -54,3 +56,6 @@ We welcome contributions! If you'd like to contribute your own app or idea, plea
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+
+[![FOSSA Status](https://app.fossa.com/api/projects/git%2Bgithub.com%2Ficeye-ltd%2Fapp-examples.svg?type=large)](https://app.fossa.com/projects/git%2Bgithub.com%2Ficeye-ltd%2Fapp-examples?ref=badge_large)
