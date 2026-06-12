@@ -16,8 +16,8 @@
     "react-leaflet": "^4.2.1"
   },
   "devDependencies": {
-    "@vitejs/plugin-react": "^5.1.0",
+    "@vitejs/plugin-react": "^5.2.0",
     "prop-types": "^15.8.1",
-    "vite": "^7.3.2"
+    "vite": "^8.0.16"
   }
 }
